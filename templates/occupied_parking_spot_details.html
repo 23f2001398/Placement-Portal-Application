@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Occupied Parking Spots - ParkWheely</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">ParkWheely Admin</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAdminSearch">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarAdminSearch">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/admin_dashboard">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="/users">Users</a></li>
+        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+        <li class="nav-item"><a class="nav-link" href="/summary">Summary</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/occupied_spots">Occupied Spots</a></li>
+      </ul>
+      <div class="d-flex align-items-center ms-auto">
+        <span class="text-white me-3">Welcome, Admin</span>
+        <a href="/login" class="btn btn-outline-light btn-sm">Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Content -->
+<div class="container mt-5">
+  <div class="card shadow">
+    <div class="card-body">
+      <h3 class="mb-4">Occupied Parking Spot Details</h3>
+
+      <div class="table-responsive">
+        <table class="table table-dark table-bordered table-hover">
+          <thead class="table-secondary text-dark">
+            <tr>
+              <th>Spot ID</th>
+              <th>Parking Lot</th>
+              <th>User Name</th>
+              <th>User Email</th>
+              <th>Vehicle Number</th>
+              <th>Parked At</th>
+              <th>Cost So Far (₹)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in occupied_spots %}
+              <tr>
+                <td>{{ entry.spot.id }}</td>
+                <td>{{ entry.spot.lot.location }}</td>
+                <td>{{ entry.user.name }}</td>
+                <td>{{ entry.user.email }}</td>
+                <td>{{ entry.vehicle_number }}</td>
+                <td>{{ entry.parking_timestamp.strftime('%Y-%m-%d %I:%M %p') }}</td>
+                <td>
+                  {% if entry.parking_cost %}
+                    ₹{{ entry.parking_cost }}
+                  {% else %}
+                    Calculating...
+                  {% endif %}
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="7" class="text-center">No occupied parking spots found.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <a href="/admin_dashboard" class="btn btn-secondary mt-3">Back to Dashboard</a>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

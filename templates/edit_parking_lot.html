@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Parking Lot - ParkWheely</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">ParkWheely Admin</a>
+      <a href="/admin/dashboard" class="btn btn-outline-light btn-sm ms-auto">Dashboard</a>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container mt-5">
+    <div class="card shadow mx-auto" style="max-width: 600px;">
+      <div class="card-body">
+        <h3 class="mb-4">Edit Parking Lot</h3>
+
+        <form method="POST" action="/edit/{{ lot.id }}">
+          <!-- Location -->
+          <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" class="form-control" id="location" name="location" required maxlength="32"
+                   value="{{ lot.location }}">
+          </div>
+
+          <!-- Pincode -->
+          <div class="mb-3">
+            <label for="pin_code" class="form-label">Pincode</label>
+            <input type="number" class="form-control" id="pin_code" name="pincode" required
+                   value="{{ lot.pin_code }}">
+          </div>
+
+          <!-- Price -->
+          <div class="mb-3">
+            <label for="price" class="form-label">Price (₹/hr)</label>
+            <input type="number" class="form-control" id="price" name="price" required
+                   value="{{ lot.price }}">
+          </div>
+
+          <!-- Available Spots -->
+          <div class="mb-3">
+            <label for="available_spots" class="form-label">Available Spots</label>
+            <input type="number" class="form-control" id="available_spots" name="available_spots" required
+                   value="{{ lot.available_spots }}">
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-success">Update Parking Lot</button>
+          <a href="/admin_dashboard" class="btn btn-secondary ms-2">Cancel</a>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Parking Spots - ParkWheely</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">ParkWheely Admin</a>
+    <a href="/admin_dashboard" class="btn btn-outline-light btn-sm ms-auto">Dashboard</a>
+  </div>
+</nav>
+
+<div class="container my-5">
+  <h3>Parking Spots in Lot ID: {{ spots[0].lot_id if spots else 'N/A' }}</h3>
+
+  <div class="table-responsive mt-4">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Lot ID</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if spots %}
+          {% for spot in spots %}
+            <tr>
+              <td>{{ spot.id }}</td>
+              <td>{{ spot.lot_id }}</td>
+              <td>
+                {% if spot.status == 'Available' %}
+                  <span class="badge bg-success">Available</span>
+                {% elif spot.status == 'Occupied' %}
+                  <span class="badge bg-danger">Occupied</span>
+                {% else %}
+                  <span class="badge bg-secondary">Unknown</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="3" class="text-center">No parking spots found for this lot.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <a href="/admin_dashboard" class="btn btn-secondary mt-3">Back to Dashboard</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Dashboard - ParkWheely</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">ParkWheely</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="/user_dashboard/{{ user }}">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user_summary/{{ user }}">Summary</a>
+        </li>
+      </ul>
+    </div>
+    <div class="d-flex align-items-center ms-auto">
+      <span class="text-white me-3">Welcome, {{ user }}</span>
+      <a href="/edit_profile/{{ user }}" class="btn btn-outline-light btn-sm me-2">Edit Profile</a>
+      <a href="/login" class="btn btn-outline-light btn-sm">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-5">
+  <h2 class="mb-4 text-dark">User Dashboard</h2>
+
+  <!-- Search Form -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Search Parking Lots</h5>
+      <form method="POST" action="/user_search/{{ user }}" class="row g-2">
+        <div class="col-md-6 col-lg-4">
+          <input type="text" name="query" class="form-control" placeholder="Enter location or pincode" required>
+        </div>
+        <div class="col-md-4 col-lg-2">
+          <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Search Results -->
+  {% if search_results %}
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Available Parking Lots</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Location</th>
+              <th>Pincode</th>
+              <th>Available Spots</th>
+              <th>Price (₹/hr)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for lot in search_results %}
+            <tr>
+              <td>{{ lot.location }}</td>
+              <td>{{ lot.pin_code }}</td>
+              <td>{{ lot.available_spots }}</td>
+              <td>{{ lot.price }}</td>
+              <td>
+                {% if lot.available_spots > 0 %}
+                  <a href="/{{ user }}/book/{{ lot.id }}" class="btn btn-success btn-sm">Book</a>
+                {% else %}
+                  <span class="text-warning">Full</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% elif query %}
+  <div class="alert alert-warning">No results found for "{{ query }}"</div>
+  {% endif %}
+
+  <!-- Active Bookings -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Active Bookings</h5>
+      {% if active_booking %}
+        {% for booking in active_booking %}
+        <div class="mb-3 p-3 bg-light rounded border">
+          <p class="mb-1"><strong>Spot Id:</strong> {{ booking.spot_id }}</p>
+          <p class="mb-1"><strong>Start Time:</strong> {{ booking.parking_timestamp.strftime('%Y-%m-%d %I:%M %p') }}</p>
+          <p class="mb-1"><strong>Vehicle Number:</strong> {{ booking.vehicle_number }}</p>
+          <p class="mb-2"><strong>Status:</strong> Ongoing</p>
+          <a href="/{{ user }}/end_booking/{{ booking.id }}" class="btn btn-danger btn-sm">Release</a>
+        </div>
+        {% endfor %}
+      {% else %}
+      <p class="text-muted">You have no active bookings currently.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Booking History -->
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Booking History</h5>
+      {% if booking_history %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Location</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Cost (₹)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for booking in booking_history %}
+            <tr>
+              <td>{{ booking.spot.lot.location }}</td>
+              <td>{{ booking.parking_timestamp.strftime('%Y-%m-%d %I:%M %p') }}</td>
+              <td>
+                {% if booking.leaving_timestamp %}
+                  {{ booking.leaving_timestamp.strftime('%Y-%m-%d %I:%M %p') }}
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+              <td>{{ booking.parking_cost if booking.parking_cost else '—' }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-muted">No past bookings found.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
